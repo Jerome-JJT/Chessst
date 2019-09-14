@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Chesst
 {
     public class Terrain
-    {
-        //List<ChessElement> line = new List<ChessElement>();
-
-        //public List<List<ChessElement>> grid = new List<List<ChessElement>>;
-
+    { 
         static ChessElement blackPawn = new ChessElement(ChessElement.Types.Pawn, ChessElement.Teams.Black);
         static ChessElement whitePawn = new ChessElement(ChessElement.Types.Pawn, ChessElement.Teams.White);
 
         static ChessElement voidPlace = new ChessElement(ChessElement.Types.Void, ChessElement.Teams.Void);
 
-        private List<List<ChessElement>> oneGrid = new List<List<ChessElement>>
+        private List<List<ChessElement>> grid = new List<List<ChessElement>>
         {
             new List<ChessElement>
             {
@@ -43,26 +35,10 @@ namespace Chesst
             }
         };
 
-        public Terrain()
+        public List<List<ChessElement>> Grid
         {
-            /*for(int i = 0; i < 8; i++)
-            {
-                List<ChessElement> oneLine = new List<ChessElement>();
-
-                for (int j = 0; j < 8; j++)
-                {
-                    ChessElement oneElement = new ChessElement(ChessElement.Types.Pawn, ChessElement.Teams.White);
-                    oneLine.Add(oneElement);
-                }
-
-                oneGrid.Add(oneLine);
-            }*/
-        }
-
-        public List<List<ChessElement>> OneGrid
-        {
-            get { return oneGrid; }
-            set { oneGrid = value; }
+            get { return grid; }
+            set { grid = value; }
         }
     }
 }

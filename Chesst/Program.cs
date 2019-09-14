@@ -12,54 +12,38 @@ namespace Chesst
         {
             Terrain terre = new Terrain();
 
-            //List<List<ChessElement>> gri = terre.OneGrid;
-
             Console.SetBufferSize(400, 400);
             Console.SetWindowSize(40, 12);
-            //Console.SetWindowPosition(300, 10);
 
-            bool whiteColor = true;
-            bool invertcolor = true;
-
-            drawGrid(terre);
-
-
-            /*foreach (List<ChessElement> oneLine in terre.OneGrid)
+            
+            while(true)
             {
-                foreach (ChessElement oneCase in oneLine)
+                bool flagError = false;
+
+                do
                 {
-                    if (whiteColor ^ invertcolor)
+                    drawGrid(terre);
+
+                    if(flagError)
                     {
-                        Console.BackgroundColor = ConsoleColor.DarkGray;
-                        whiteColor = !whiteColor;
-                    }
-                    else
-                    {
-                        Console.BackgroundColor = ConsoleColor.Gray;
-                        whiteColor = !whiteColor;
+                        Console.Write("Invalid input\n");
                     }
 
-                    if (oneCase.Team == ChessElement.Teams.White)
-                    {
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                    else if (oneCase.Team == ChessElement.Teams.Black)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Black;
-                    }
+                    Console.Write("Choose which piece to pick (e.g. a1) ");
+                    string input = Console.ReadLine();
 
-                    Console.Write($" {(char) oneCase.Type} ");
-                }
-
-                invertcolor = !invertcolor;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.Write(" \n\t");
-            }*/
+                    userinput(terre, input);
 
 
 
 
+                } while (askPiece);
+
+            }
+
+
+
+            Console.Write("END");
             Console.ReadLine();
         }
 
@@ -74,9 +58,9 @@ namespace Chesst
             Console.BackgroundColor = backSide;
             Console.Write($"    a  b  c  d  e  f  g  h    ");
             Console.ResetColor();
-            Console.Write($"\n");
+            Console.Write($" \n");
 
-            for (int i = 0; i < gridToDraw.OneGrid.Count(); i++)
+            for (int i = 0; i < gridToDraw.Grid.Count(); i++)
             {
                 Console.Write($"{leftMargin}");
                 Console.ForegroundColor = frontSide;
@@ -84,7 +68,7 @@ namespace Chesst
                 Console.Write($" {8 - i} ");
                 Console.ResetColor();
 
-                for (int j = 0; j < gridToDraw.OneGrid[i].Count(); j++)
+                for (int j = 0; j < gridToDraw.Grid[i].Count(); j++)
                 {
                     if ((i + j) % 2 == 1)
                     {
@@ -95,7 +79,7 @@ namespace Chesst
                         Console.BackgroundColor = ConsoleColor.Gray;
                     }
 
-                    if (gridToDraw.OneGrid[i][j].Team == ChessElement.Teams.White)
+                    if (gridToDraw.Grid[i][j].Team == ChessElement.Teams.White)
                     {
                         Console.ForegroundColor = ConsoleColor.White;
                     }
@@ -104,14 +88,14 @@ namespace Chesst
                         Console.ForegroundColor = ConsoleColor.Black;
                     }
 
-                    Console.Write($" {(char)gridToDraw.OneGrid[i][j].Type} ");
+                    Console.Write($" {(char)gridToDraw.Grid[i][j].Type} ");
                 }
 
                 Console.ForegroundColor = frontSide;
                 Console.BackgroundColor = backSide;
                 Console.Write($" {8 - i} ");
                 Console.ResetColor();
-                Console.Write($"\n");
+                Console.Write($" \n");
             }
 
             Console.Write($"{leftMargin}");
@@ -119,7 +103,51 @@ namespace Chesst
             Console.BackgroundColor = backSide;
             Console.Write($"    a  b  c  d  e  f  g  h    ");
             Console.ResetColor();
-            Console.Write($"\n");
+            Console.Write($" \n");
+        }
+
+        static int userinput(Terrain terre, string input)
+        {
+            try
+            {
+                int line = 0;
+                int col = 0;
+
+                if ((input[1] >= '1' && input[1] <= '8'))
+                {
+                    line = input[1] - 48;
+                }
+                else
+                {
+                    return 0;
+                }
+
+                if ((input[0] >= 'A' && input[0] <= 'H'))
+                {
+                    col = input[0] - 64;
+                }
+                else if ((input[0] >= 'a' && input[0] <= 'h'))
+                {
+                    col = input[0] - 96;
+                }
+                else
+                {
+                    return 0;
+                }
+
+                if (terre.Grid[line][col].Team != ChessElement.Teams.Void)
+                {
+                    return (10*line) + (col);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return 0;
+            }
         }
     }
 }
