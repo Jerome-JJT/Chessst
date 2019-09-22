@@ -2,7 +2,7 @@
 
 namespace Chesst
 {
-    public class Terrain
+    public class ChessGame
     { 
         static ChessElement blackPawn = new ChessElement(ChessElement.Types.Pawn, ChessElement.Teams.Black);
         static ChessElement whitePawn = new ChessElement(ChessElement.Types.Pawn, ChessElement.Teams.White);

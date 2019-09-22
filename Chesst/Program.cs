@@ -10,34 +10,71 @@ namespace Chesst
     {
         static void Main(string[] args)
         {
-            Terrain terre = new Terrain();
+            ChessGame gamePlate = new ChessGame();
 
             Console.SetBufferSize(400, 400);
-            Console.SetWindowSize(40, 12);
+            Console.SetWindowSize(55, 13);
 
             
             while(true)
             {
-                bool flagError = false;
+                CoordCluster startPos;
+                CoordCluster destPos;
+
+                bool validInput;
+                string errorMessage;
+
+
+                validInput = false;
+                errorMessage = null;
 
                 do
                 {
-                    drawGrid(terre);
+                    Console.Clear();
+                    DrawPlate(gamePlate);
 
-                    if(flagError)
+                    if(errorMessage != null)
                     {
-                        Console.Write("Invalid input\n");
+                        Console.Write($"{errorMessage}\n");
+                        errorMessage = null;
+                    }
+                    else
+                    {
+                        Console.Write("\n");
                     }
 
-                    Console.Write("Choose which piece to pick (e.g. a1) ");
-                    string input = Console.ReadLine();
+                    Console.Write("Choose which of your piece you want pick (e.g. a1) ");
+                    string rawInput = Console.ReadLine();
+                    
+                    validInput = IsPickable(gamePlate, rawInput, startPos, out errorMessage);
 
-                    userinput(terre, input);
+                } while (!validInput);
 
 
+                validInput = false;
+                errorMessage = null;
 
+                do
+                {
+                    Console.Clear();
+                    DrawPlate(gamePlate, startPos);
 
-                } while (askPiece);
+                    if (errorMessage != null)
+                    {
+                        Console.Write($"{errorMessage}\n");
+                        errorMessage = null;
+                    }
+                    else
+                    {
+                        Console.Write("\n");
+                    }
+
+                    Console.Write("Choose where you want to move your piece (e.g. a1) ");
+                    string rawInput = Console.ReadLine();
+
+                    validInput = canMoveThere(gamePlate, rawInput, startPos, out errorMessage);
+
+                } while (!validInput);
 
             }
 
@@ -47,7 +84,7 @@ namespace Chesst
             Console.ReadLine();
         }
 
-        static void drawGrid(Terrain gridToDraw)
+        static void DrawPlate(ChessGame plateToDraw, CoordCluster selectedCoords = null)
         {
             string leftMargin = "       ";
             ConsoleColor frontSide = ConsoleColor.Black;
@@ -60,26 +97,35 @@ namespace Chesst
             Console.ResetColor();
             Console.Write($" \n");
 
-            for (int i = 0; i < gridToDraw.Grid.Count(); i++)
+            for (int indexX = 0; indexX < plateToDraw.Grid.Count(); indexX++)
             {
                 Console.Write($"{leftMargin}");
                 Console.ForegroundColor = frontSide;
                 Console.BackgroundColor = backSide;
-                Console.Write($" {8 - i} ");
+                Console.Write($" {8 - indexX} ");
                 Console.ResetColor();
 
-                for (int j = 0; j < gridToDraw.Grid[i].Count(); j++)
+                for (int indexY = 0; indexY < plateToDraw.Grid[indexX].Count(); indexY++)
                 {
-                    if ((i + j) % 2 == 1)
+                    Console.ResetColor();
+
+                    if ((selectedCoords != null) && (selectedCoords.X == indexX && selectedCoords.Y == indexY))
                     {
-                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                        Console.BackgroundColor = ConsoleColor.DarkCyan;
                     }
                     else
                     {
-                        Console.BackgroundColor = ConsoleColor.Gray;
+                        if ((indexX + indexY) % 2 == 1)
+                        {
+                            Console.BackgroundColor = ConsoleColor.DarkGray;
+                        }
+                        else
+                        {
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                        }
                     }
 
-                    if (gridToDraw.Grid[i][j].Team == ChessElement.Teams.White)
+                    if (plateToDraw.Grid[indexX][indexY].Team == ChessElement.Teams.White)
                     {
                         Console.ForegroundColor = ConsoleColor.White;
                     }
@@ -88,12 +134,12 @@ namespace Chesst
                         Console.ForegroundColor = ConsoleColor.Black;
                     }
 
-                    Console.Write($" {(char)gridToDraw.Grid[i][j].Type} ");
+                    Console.Write($" {(char)plateToDraw.Grid[indexX][indexY].Type} ");
                 }
 
                 Console.ForegroundColor = frontSide;
                 Console.BackgroundColor = backSide;
-                Console.Write($" {8 - i} ");
+                Console.Write($" {8 - indexX} ");
                 Console.ResetColor();
                 Console.Write($" \n");
             }
@@ -106,48 +152,102 @@ namespace Chesst
             Console.Write($" \n");
         }
 
-        static int userinput(Terrain terre, string input)
+        static CoordCluster ProcessCoords (string userInput)
         {
+            CoordCluster processedCoords = new CoordCluster();
+
+            if ((userInput[0] >= 'A' && userInput[0] <= 'H'))
+            {
+                processedCoords.Y = userInput[0] - 'A';
+            }
+            else if ((userInput[0] >= 'a' && userInput[0] <= 'h'))
+            {
+                processedCoords.Y = userInput[0] - 'a';
+            }
+            else
+            {
+                throw new Exception("InvalidInput");
+            }
+
+            if ((userInput[1] >= '1' && userInput[1] <= '8'))
+            {
+                processedCoords.X = 7 - (userInput[1] - '1');
+            }
+            else
+            {
+                throw new Exception("InvalidInput");
+            }
+
+            return processedCoords;
+        }
+
+
+        static bool IsPickable(ChessGame terre, string input, CoordCluster coords, out string raiseError)
+        {
+            
+            /*
+            if ((input[0] >= 'A' && input[0] <= 'H'))
+            {
+                coords.Y = input[0] - 'A';
+            }
+            else if ((input[0] >= 'a' && input[0] <= 'h'))
+            {
+                coords.Y = input[0] - 'a';
+            }
+            else
+            {
+                raiseError = "Invalid input";
+                return false;
+            }
+
+            if ((input[1] >= '1' && input[1] <= '8'))
+            {
+                coords.X = 7 - (input[1] - '1');
+            }
+            else
+            {
+                raiseError = "Invalid input";
+                return false;
+            }
+            */
             try
             {
-                int line = 0;
-                int col = 0;
+                coords = ProcessCoords(input);
+            }
+            catch
+            {
 
-                if ((input[1] >= '1' && input[1] <= '8'))
+            }
+
+
+            try
+            {
+                if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.White)
                 {
-                    line = input[1] - 48;
+                    raiseError = null;
+                    return true;
+                }
+                else if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.Black)
+                {
+                    raiseError = "Not your piece";
+                    return false;
                 }
                 else
                 {
-                    return 0;
-                }
-
-                if ((input[0] >= 'A' && input[0] <= 'H'))
-                {
-                    col = input[0] - 64;
-                }
-                else if ((input[0] >= 'a' && input[0] <= 'h'))
-                {
-                    col = input[0] - 96;
-                }
-                else
-                {
-                    return 0;
-                }
-
-                if (terre.Grid[line][col].Team != ChessElement.Teams.Void)
-                {
-                    return (10*line) + (col);
-                }
-                else
-                {
-                    return 0;
+                    raiseError = "Not a piece";
+                    return false;
                 }
             }
             catch (IndexOutOfRangeException)
             {
-                return 0;
+                raiseError = "Invalid input";
+                return false;
             }
         }
+
+
+
+
+
     }
 }

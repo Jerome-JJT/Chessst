@@ -8,7 +8,6 @@ P:\_Modules CPNV\ICT-226A Prog sans hérédité\Chesst\Chesst\Chesst\obj\Debug\C
 C:\Users\jerom\Desktop\Chesst\Chesst\bin\Debug\Chesst.exe.config
 C:\Users\jerom\Desktop\Chesst\Chesst\bin\Debug\Chesst.exe
 C:\Users\jerom\Desktop\Chesst\Chesst\bin\Debug\Chesst.pdb
-C:\Users\jerom\Desktop\Chesst\Chesst\obj\Debug\Chesst.csprojResolveAssemblyReference.cache
 C:\Users\jerom\Desktop\Chesst\Chesst\obj\Debug\Chesst.csproj.CoreCompileInputs.cache
 C:\Users\jerom\Desktop\Chesst\Chesst\obj\Debug\Chesst.exe
 C:\Users\jerom\Desktop\Chesst\Chesst\obj\Debug\Chesst.pdb
