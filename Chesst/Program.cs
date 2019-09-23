@@ -77,8 +77,7 @@ namespace Chesst
                 } while (!authMove);
 
                 gamePlate.Grid[destPos.X][destPos.Y] = gamePlate.Grid[startPos.X][startPos.Y];
-                gamePlate.Grid[startPos.X][startPos.Y].Type = ChessElement.Types.Void;
-                gamePlate.Grid[startPos.X][startPos.Y].Team = ChessElement.Teams.Void;
+                gamePlate.Grid[startPos.X][startPos.Y] = new ChessElement(ChessElement.Types.Void, ChessElement.Teams.Void);
 
                 DrawPlate(gamePlate);
             }
