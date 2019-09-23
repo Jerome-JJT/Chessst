@@ -51,7 +51,8 @@ namespace Chesst
                 } while (!validInput);
 
 
-                validInput = false;
+
+                bool authMove = false;
                 errorMessage = null;
 
                 do
@@ -72,10 +73,14 @@ namespace Chesst
                     Console.Write("Choose where you want to move your piece (e.g. a1) ");
                     string rawInput = Console.ReadLine();
 
-                    validInput = CanMoveThere(gamePlate, rawInput, out startPos, out errorMessage);
+                    authMove = CanMoveThere(gamePlate, rawInput, startPos, out destPos, out errorMessage);
+                } while (!authMove);
 
-                } while (!validInput);
+                gamePlate.Grid[destPos.X][destPos.Y] = gamePlate.Grid[startPos.X][startPos.Y];
+                gamePlate.Grid[startPos.X][startPos.Y].Type = ChessElement.Types.Void;
+                gamePlate.Grid[startPos.X][startPos.Y].Team = ChessElement.Teams.Void;
 
+                DrawPlate(gamePlate);
             }
 
 
@@ -183,34 +188,11 @@ namespace Chesst
         }
 
 
-        static bool IsPickable(ChessGame terre, string input, out CoordCluster coords, out string raiseError)
+        static bool IsPickable(ChessGame plate, string input, out CoordCluster coords, out string raiseError)
         {
+            raiseError = null;
             coords = null;
-            /*
-            if ((input[0] >= 'A' && input[0] <= 'H'))
-            {
-                coords.Y = input[0] - 'A';
-            }
-            else if ((input[0] >= 'a' && input[0] <= 'h'))
-            {
-                coords.Y = input[0] - 'a';
-            }
-            else
-            {
-                raiseError = "Invalid input";
-                return false;
-            }
-
-            if ((input[1] >= '1' && input[1] <= '8'))
-            {
-                coords.X = 7 - (input[1] - '1');
-            }
-            else
-            {
-                raiseError = "Invalid input";
-                return false;
-            }
-            */
+            
             try
             {
                 coords = ProcessCoords(input);
@@ -224,12 +206,11 @@ namespace Chesst
 
             try
             {
-                if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.White)
+                if (plate.Grid[coords.X][coords.Y].Team == ChessElement.Teams.White)
                 {
-                    raiseError = null;
                     return true;
                 }
-                else if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.Black)
+                else if (plate.Grid[coords.X][coords.Y].Team == ChessElement.Teams.Black)
                 {
                     raiseError = "Not your piece";
                     return false;
@@ -248,13 +229,14 @@ namespace Chesst
         }
 
 
-        static bool CanMoveThere(ChessGame terre, string input, out CoordCluster coords, out string raiseError)
+        static bool CanMoveThere(ChessGame plate, string input, CoordCluster start, out CoordCluster dest, out string raiseError)
         {
-            coords = null;
+            dest = null;
+            raiseError = null;
 
             try
             {
-                coords = ProcessCoords(input);
+                dest = ProcessCoords(input);
             }
             catch (Exception e) when (e.Message == "InvalidInput")
             {
@@ -265,21 +247,8 @@ namespace Chesst
 
             try
             {
-                if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.White)
-                {
-                    raiseError = null;
-                    return true;
-                }
-                else if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.Black)
-                {
-                    raiseError = "Not your piece";
-                    return false;
-                }
-                else
-                {
-                    raiseError = "Not a piece";
-                    return false;
-                }
+                plate.Grid[start.X][start.Y].CanGo(plate, start, dest);
+                return true;
             }
             catch (IndexOutOfRangeException)
             {

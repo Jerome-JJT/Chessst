@@ -75,5 +75,38 @@ namespace Chesst
             get { return type; }
             set { type = value; }
         }
+
+
+        public bool CanGo(ChessGame gamePlate, CoordCluster start, CoordCluster destination)
+        {
+            switch(this.Type)
+            {
+                case ChessElement.Types.Pawn:
+                    if((destination.X == start.X+((2 * ((int) this.Team)) - 1)) &&
+                        destination.Y == start.Y)
+                    {
+                        return true;
+                    }
+                    break;
+
+                case ChessElement.Types.Rook:
+                    break;
+
+                case ChessElement.Types.Knight:
+                    break;
+
+                case ChessElement.Types.Bishop:
+                    break;
+
+                case ChessElement.Types.Queen:
+                    break;
+
+                case ChessElement.Types.King:
+                    break;
+
+            }
+
+            return false;
+        }
     }
 }
