@@ -50,8 +50,8 @@ namespace Chesst
 
         public enum Teams
         {
-            Black,
-            White,
+            Black = +1,
+            White = -1,
             Void
         }
 
@@ -83,7 +83,8 @@ namespace Chesst
             {
                 case ChessElement.Types.Pawn:
                     if((destination.X == start.X+(-1)) &&
-                        destination.Y == start.Y)
+                        (destination.Y == start.Y) &&
+                        (gamePlate.Grid[destination.X][destination.Y].Type == ChessElement.Types.Void))
                     {
                         return true;
                     }
