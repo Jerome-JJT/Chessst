@@ -46,7 +46,7 @@ namespace Chesst
                     Console.Write("Choose which of your piece you want pick (e.g. a1) ");
                     string rawInput = Console.ReadLine();
                     
-                    validInput = IsPickable(gamePlate, rawInput, startPos, out errorMessage);
+                    validInput = IsPickable(gamePlate, rawInput, out startPos, out errorMessage);
 
                 } while (!validInput);
 
@@ -72,7 +72,7 @@ namespace Chesst
                     Console.Write("Choose where you want to move your piece (e.g. a1) ");
                     string rawInput = Console.ReadLine();
 
-                    validInput = canMoveThere(gamePlate, rawInput, startPos, out errorMessage);
+                    validInput = CanMoveThere(gamePlate, rawInput, out startPos, out errorMessage);
 
                 } while (!validInput);
 
@@ -152,6 +152,7 @@ namespace Chesst
             Console.Write($" \n");
         }
 
+
         static CoordCluster ProcessCoords (string userInput)
         {
             CoordCluster processedCoords = new CoordCluster();
@@ -182,9 +183,9 @@ namespace Chesst
         }
 
 
-        static bool IsPickable(ChessGame terre, string input, CoordCluster coords, out string raiseError)
+        static bool IsPickable(ChessGame terre, string input, out CoordCluster coords, out string raiseError)
         {
-            
+            coords = null;
             /*
             if ((input[0] >= 'A' && input[0] <= 'H'))
             {
@@ -214,9 +215,51 @@ namespace Chesst
             {
                 coords = ProcessCoords(input);
             }
-            catch
+            catch (Exception e) when (e.Message == "InvalidInput")
             {
+                raiseError = "Invalid input";
+                return false;
+            }
 
+
+            try
+            {
+                if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.White)
+                {
+                    raiseError = null;
+                    return true;
+                }
+                else if (terre.Grid[coords.X][coords.Y].Team == ChessElement.Teams.Black)
+                {
+                    raiseError = "Not your piece";
+                    return false;
+                }
+                else
+                {
+                    raiseError = "Not a piece";
+                    return false;
+                }
+            }
+            catch (IndexOutOfRangeException)
+            {
+                raiseError = "Invalid input";
+                return false;
+            }
+        }
+
+
+        static bool CanMoveThere(ChessGame terre, string input, out CoordCluster coords, out string raiseError)
+        {
+            coords = null;
+
+            try
+            {
+                coords = ProcessCoords(input);
+            }
+            catch (Exception e) when (e.Message == "InvalidInput")
+            {
+                raiseError = "Invalid input";
+                return false;
             }
 
 

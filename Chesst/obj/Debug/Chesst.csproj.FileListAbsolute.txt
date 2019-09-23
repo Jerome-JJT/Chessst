@@ -11,3 +11,4 @@ C:\Users\jerom\Desktop\Chesst\Chesst\bin\Debug\Chesst.pdb
 C:\Users\jerom\Desktop\Chesst\Chesst\obj\Debug\Chesst.csproj.CoreCompileInputs.cache
 C:\Users\jerom\Desktop\Chesst\Chesst\obj\Debug\Chesst.exe
 C:\Users\jerom\Desktop\Chesst\Chesst\obj\Debug\Chesst.pdb
+C:\Users\jerom\Desktop\chesst\Chesst\obj\Debug\Chesst.csprojResolveAssemblyReference.cache
