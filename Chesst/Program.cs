@@ -15,18 +15,15 @@ namespace Chesst
             Console.SetBufferSize(400, 400);
             Console.SetWindowSize(55, 13);
 
-            
-            while(true)
+            while (true)
             {
                 CoordCluster startPos;
                 CoordCluster destPos;
 
-                bool validInput;
-                string errorMessage;
 
-
-                validInput = false;
-                errorMessage = null;
+                bool validInput = false;
+                bool authMove = false;
+                string errorMessage = null;
 
                 do
                 {
@@ -46,14 +43,10 @@ namespace Chesst
                     Console.Write("Choose which of your piece you want pick (e.g. a1) ");
                     string rawInput = Console.ReadLine();
                     
-                    validInput = IsPickable(gamePlate, rawInput, out startPos, out errorMessage);
+                    validInput = IsPickable(gamePlate, rawInput, ChessElement.Teams.White, out startPos, out errorMessage);
 
                 } while (!validInput);
 
-
-
-                bool authMove = false;
-                errorMessage = null;
 
                 do
                 {
@@ -78,8 +71,6 @@ namespace Chesst
 
                 gamePlate.Grid[destPos.X][destPos.Y] = gamePlate.Grid[startPos.X][startPos.Y];
                 gamePlate.Grid[startPos.X][startPos.Y] = new ChessElement(ChessElement.Types.Void, ChessElement.Teams.Void);
-
-                DrawPlate(gamePlate);
             }
 
 
@@ -187,7 +178,7 @@ namespace Chesst
         }
 
 
-        static bool IsPickable(ChessGame plate, string input, out CoordCluster coords, out string raiseError)
+        static bool IsPickable(ChessGame plate, string input, ChessElement.Teams actPlayer, out CoordCluster coords, out string raiseError)
         {
             raiseError = null;
             coords = null;
@@ -205,11 +196,11 @@ namespace Chesst
 
             try
             {
-                if (plate.Grid[coords.X][coords.Y].Team == ChessElement.Teams.White)
+                if (plate.Grid[coords.X][coords.Y].Team == actPlayer)
                 {
                     return true;
                 }
-                else if (plate.Grid[coords.X][coords.Y].Team == ChessElement.Teams.Black)
+                else if (plate.Grid[coords.X][coords.Y].Team != ChessElement.Teams.Void)
                 {
                     raiseError = "Not your piece";
                     return false;
