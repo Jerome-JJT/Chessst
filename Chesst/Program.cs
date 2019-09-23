@@ -246,12 +246,23 @@ namespace Chesst
 
             try
             {
-                plate.Grid[start.X][start.Y].CanGo(plate, start, dest);
-                return true;
+                if (plate.Grid[start.X][start.Y].CanGo(plate, start, dest))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             catch (IndexOutOfRangeException)
             {
                 raiseError = "Invalid input";
+                return false;
+            }
+            catch (Exception e) when (e.Message == "ImpossibleMove")
+            {
+                raiseError = "Impossible move";
                 return false;
             }
         }

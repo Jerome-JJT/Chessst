@@ -82,10 +82,14 @@ namespace Chesst
             switch(this.Type)
             {
                 case ChessElement.Types.Pawn:
-                    if((destination.X == start.X+((2 * ((int) this.Team)) - 1)) &&
+                    if((destination.X == start.X+(-1)) &&
                         destination.Y == start.Y)
                     {
                         return true;
+                    }
+                    else
+                    {
+                        throw new Exception("ImpossibleMove");
                     }
                     break;
 
