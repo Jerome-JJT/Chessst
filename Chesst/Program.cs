@@ -17,60 +17,131 @@ namespace Chesst
 
             while (true)
             {
-                CoordCluster startPos;
-                CoordCluster destPos;
+                CoordCluster startPos = new CoordCluster();
+                CoordCluster destPos = new CoordCluster();
 
-
-                bool validInput = false;
-                bool authMove = false;
-                string errorMessage = null;
-
-                do
+                for (int turn = 0; turn < 6; turn++)
                 {
-                    Console.Clear();
-                    DrawPlate(gamePlate);
+                    bool validInput = false;
+                    string errorMessage = null;
 
-                    if(errorMessage != null)
+                    if (turn == 0 || turn == 1 || turn == 3 || turn == 4)
                     {
-                        Console.Write($"{errorMessage}\n");
-                        errorMessage = null;
+                        do
+                        {
+                            Console.Clear();
+                            DrawPlate(gamePlate);
+
+                            if (errorMessage != null)
+                            {
+                                Console.Write($"{errorMessage}\n");
+                                errorMessage = null;
+                            }
+                            else
+                            {
+                                Console.Write("\n");
+                            }
+
+
+                            if (turn == 0)
+                            {
+                                Console.Write(" (White) Choose which of your \n piece you want pick (e.g. a1) ");
+                            }
+                            else if (turn == 1)
+                            {
+                                Console.Write(" (White) Choose where you want \n to move your piece (e.g. a1) ");
+                            }
+                            else if (turn == 3)
+                            {
+                                Console.Write(" (Black) Choose where you want \n to move your piece (e.g. a1) ");
+                            }
+                            else if (turn == 4)
+                            {
+                                Console.Write(" (Black) Choose where you want \n to move your piece (e.g. a1) ");
+                            }
+
+
+                            string rawInput = Console.ReadLine();
+
+
+                            if (turn == 0)
+                            {
+                                validInput = IsPickable(gamePlate, rawInput, ChessElement.Teams.White, out startPos, out errorMessage);
+                            }
+                            else if (turn == 3)
+                            {
+                                validInput = IsPickable(gamePlate, rawInput, ChessElement.Teams.Black, out startPos, out errorMessage);
+                            }
+                            else if (turn == 1 || turn == 4)
+                            {
+                                validInput = CanMoveThere(gamePlate, rawInput, startPos, out destPos, out errorMessage);
+                            }
+
+
+                            /*if (turn == 0)
+                            {
+                                Console.Write("Choose which of your piece you want pick (e.g. a1) ");
+                                string rawInput = Console.ReadLine();
+
+                                validInput = IsPickable(gamePlate, rawInput, ChessElement.Teams.White, out startPos, out errorMessage);
+                            }
+                            else if (turn == 1)
+                            {
+                                Console.Write("Choose where you want to move your piece (e.g. a1) ");
+                                string rawInput = Console.ReadLine();
+
+                                validInput = CanMoveThere(gamePlate, rawInput, startPos, out destPos, out errorMessage);
+                            }
+                            else if (turn == 3)
+                            {
+                                Console.Write("Choose which of your piece you want pick (e.g. a1) ");
+                                string rawInput = Console.ReadLine();
+
+                                validInput = IsPickable(gamePlate, rawInput, ChessElement.Teams.Black, out startPos, out errorMessage);
+                            }
+                            else if (turn == 3)
+                            {
+                                Console.Write("Choose where you want to move your piece (e.g. a1) ");
+                                string rawInput = Console.ReadLine();
+
+                                validInput = CanMoveThere(gamePlate, rawInput, startPos, out destPos, out errorMessage);
+                            }*/
+
+
+                        } while (!validInput);
+
+
+                        /*do
+                        {
+                            Console.Clear();
+                            DrawPlate(gamePlate, startPos);
+
+                            if (errorMessage != null)
+                            {
+                                Console.Write($"{errorMessage}\n");
+                                errorMessage = null;
+                            }
+                            else
+                            {
+                                Console.Write("\n");
+                            }
+
+                            Console.Write("Choose where you want to move your piece (e.g. a1) ");
+                            string rawInput = Console.ReadLine();
+
+                            authMove = CanMoveThere(gamePlate, rawInput, startPos, out destPos, out errorMessage);
+                        } while (!authMove);
+
+                        gamePlate.Grid[destPos.X][destPos.Y] = gamePlate.Grid[startPos.X][startPos.Y];
+                        gamePlate.Grid[startPos.X][startPos.Y] = new ChessElement(ChessElement.Types.Void, ChessElement.Teams.Void);
+                        */
                     }
                     else
                     {
-                        Console.Write("\n");
+                        gamePlate.Grid[destPos.X][destPos.Y] = gamePlate.Grid[startPos.X][startPos.Y];
+                        gamePlate.Grid[startPos.X][startPos.Y] = new ChessElement(ChessElement.Types.Void, ChessElement.Teams.Void);
                     }
-
-                    Console.Write("Choose which of your piece you want pick (e.g. a1) ");
-                    string rawInput = Console.ReadLine();
-                    
-                    validInput = IsPickable(gamePlate, rawInput, ChessElement.Teams.White, out startPos, out errorMessage);
-
-                } while (!validInput);
-
-
-                do
-                {
-                    Console.Clear();
-                    DrawPlate(gamePlate, startPos);
-
-                    if (errorMessage != null)
-                    {
-                        Console.Write($"{errorMessage}\n");
-                        errorMessage = null;
-                    }
-                    else
-                    {
-                        Console.Write("\n");
-                    }
-
-                    Console.Write("Choose where you want to move your piece (e.g. a1) ");
-                    string rawInput = Console.ReadLine();
-
-                    authMove = CanMoveThere(gamePlate, rawInput, startPos, out destPos, out errorMessage);
-                } while (!authMove);
-
-                gamePlate.Grid[destPos.X][destPos.Y] = gamePlate.Grid[startPos.X][startPos.Y];
-                gamePlate.Grid[startPos.X][startPos.Y] = new ChessElement(ChessElement.Types.Void, ChessElement.Teams.Void);
+                }
             }
 
 

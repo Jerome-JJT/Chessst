@@ -52,7 +52,7 @@ namespace Chesst
         {
             Black = +1,
             White = -1,
-            Void
+            Void = 0
         }
 
         private Teams team;
@@ -83,23 +83,23 @@ namespace Chesst
             {
                 case ChessElement.Types.Pawn:
                     //Standard forward move
-                    if((destination.X == start.X+(-1)) && //Move only 1 step
+                    if((destination.X == start.X + (int)this.Team) && //Move only 1 step
                         (destination.Y == start.Y) && //Move only forward
                         (gamePlate.Grid[destination.X][destination.Y].Type == ChessElement.Types.Void)) //Move only if there void forward
                     {
                         return true;
                     }
                     //Standard attack move
-                    else if ((destination.X == start.X + (-1)) && //Move only 1 step
+                    else if ((destination.X == start.X + (int)this.Team) && //Move only 1 step
                         (destination.Y == start.Y + 1 || destination.Y == start.Y - 1) && //Move only 1 diagonal
                         ((int)gamePlate.Grid[destination.X][destination.Y].Team == (int)this.Team * -1)) //Move only if there an enemy in diagonal
                     {
                         return true;
                     }
                     //Double first move
-                    else if ((destination.X == start.X + (-2)) && //Move 2 steps
+                    else if ((destination.X == start.X + ((int)this.Team*2)) && //Move 2 steps
                         (destination.Y == start.Y) && //Move only forward
-                        (start.X == 6)) //Move only if on starting case
+                        (start.X == ( ((int)this.Team == -1) ? 6 : 1))) //Move only if on starting case
                     {
                         return true;
                     }
