@@ -11,6 +11,12 @@ namespace Chesst
         private int x;
         private int y;
 
+        public CoordCluster()
+        {
+            x = -1;
+            y = -1;
+        }
+
         public int X
         {
             get { return x; }

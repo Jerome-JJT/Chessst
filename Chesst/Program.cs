@@ -30,7 +30,7 @@ namespace Chesst
                         do
                         {
                             Console.Clear();
-                            DrawPlate(gamePlate);
+                            DrawPlate(gamePlate, startPos);
 
                             if (errorMessage != null)
                             {
@@ -140,6 +140,8 @@ namespace Chesst
                     {
                         gamePlate.Grid[destPos.X][destPos.Y] = gamePlate.Grid[startPos.X][startPos.Y];
                         gamePlate.Grid[startPos.X][startPos.Y] = new ChessElement(ChessElement.Types.Void, ChessElement.Teams.Void);
+
+                        startPos = new CoordCluster();
                     }
                 }
             }
