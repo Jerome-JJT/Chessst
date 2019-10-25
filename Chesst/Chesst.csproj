@@ -44,9 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ChessElement.cs" />
+    <Compile Include="CoordCluster.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ChessGame.cs" />
+    <Compile Include="ChessPlate.cs" />
+    <Compile Include="Teams.cs" />
+    <Compile Include="Types.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
